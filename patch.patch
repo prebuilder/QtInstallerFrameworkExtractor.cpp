@@ -1,0 +1,140 @@
+diff --git a/src/qt_installer_framework.cpp b/src/qt_installer_framework.cpp
+index 388c351..6c9f94f 100644
+--- a/src/qt_installer_framework.cpp
++++ b/src/qt_installer_framework.cpp
+@@ -133,7 +133,7 @@ void qt_installer_framework_t::header_t::range_t::_read() {
+ qt_installer_framework_t::header_t::range_t::~range_t() {
+ }
+ 
+-int32_t qt_installer_framework_t::header_t::range_t::start() {
++int64_t qt_installer_framework_t::header_t::range_t::start() {
+ 	if (f_start)
+ 		return m_start;
+ 	m_start = (_root()->header()->binary_descriptor()->end_of_exectuable() + start_read());
+@@ -386,7 +386,7 @@ qt_installer_framework_t::header_t::binary_descriptor_t::segments_descriptor_t::
+ 	return m_operations;
+ }
+ 
+-int32_t qt_installer_framework_t::header_t::binary_descriptor_t::size_of_segment_descriptor() {
++int64_t qt_installer_framework_t::header_t::binary_descriptor_t::size_of_segment_descriptor() {
+ 	if (f_size_of_segment_descriptor)
+ 		return m_size_of_segment_descriptor;
+ 	m_size_of_segment_descriptor = ((_parent()->meta_resources_count() + 2) * 16);
+@@ -408,7 +408,7 @@ qt_installer_framework_t::header_t::binary_descriptor_t::segments_descriptor_t*
+ 	return m_segments_descriptor;
+ }
+ 
+-int32_t qt_installer_framework_t::header_t::binary_descriptor_t::end_of_exectuable() {
++int64_t qt_installer_framework_t::header_t::binary_descriptor_t::end_of_exectuable() {
+ 	if (f_end_of_exectuable)
+ 		return m_end_of_exectuable;
+ 	m_end_of_exectuable = (_parent()->_root()->end_of_binary_content() - binary_content_size());
+@@ -416,7 +416,7 @@ int32_t qt_installer_framework_t::header_t::binary_descriptor_t::end_of_exectuab
+ 	return m_end_of_exectuable;
+ }
+ 
+-int32_t qt_installer_framework_t::header_t::other_stuff_size() {
++int64_t qt_installer_framework_t::header_t::other_stuff_size() {
+ 	if (f_other_stuff_size)
+ 		return m_other_stuff_size;
+ 	m_other_stuff_size = (4 * 8);
+@@ -424,7 +424,7 @@ int32_t qt_installer_framework_t::header_t::other_stuff_size() {
+ 	return m_other_stuff_size;
+ }
+ 
+-int32_t qt_installer_framework_t::header_t::binary_descriptor_offset() {
++int64_t qt_installer_framework_t::header_t::binary_descriptor_offset() {
+ 	if (f_binary_descriptor_offset)
+ 		return m_binary_descriptor_offset;
+ 	m_binary_descriptor_offset = (_root()->end_of_binary_content() - other_stuff_size());
+@@ -446,7 +446,7 @@ qt_installer_framework_t::header_t::binary_descriptor_t* qt_installer_framework_
+ 	return m_binary_descriptor;
+ }
+ 
+-int32_t qt_installer_framework_t::end_of_binary_content() {
++int64_t qt_installer_framework_t::end_of_binary_content() {
+ 	if (f_end_of_binary_content)
+ 		return m_end_of_binary_content;
+ 	m_end_of_binary_content = (magic_cookie_offset() + 8);
+diff --git a/src/qt_installer_framework.h b/src/qt_installer_framework.h
+index 76b2a9f..05301b7 100644
+--- a/src/qt_installer_framework.h
++++ b/src/qt_installer_framework.h
+@@ -174,10 +174,10 @@ public:
+ 
+ 		private:
+ 			bool f_start;
+-			int32_t m_start;
++			int64_t m_start;
+ 
+ 		public:
+-			int32_t start();
++			int64_t start();
+ 
+ 		private:
+ 			int64_t m_start_read;
+@@ -429,10 +429,10 @@ public:
+ 
+ 		private:
+ 			bool f_size_of_segment_descriptor;
+-			int32_t m_size_of_segment_descriptor;
++			int64_t m_size_of_segment_descriptor;
+ 
+ 		public:
+-			int32_t size_of_segment_descriptor();
++			int64_t size_of_segment_descriptor();
+ 
+ 		private:
+ 			bool f_segments_descriptor;
+@@ -443,10 +443,10 @@ public:
+ 
+ 		private:
+ 			bool f_end_of_exectuable;
+-			int32_t m_end_of_exectuable;
++			int64_t m_end_of_exectuable;
+ 
+ 		public:
+-			int32_t end_of_exectuable();
++			int64_t end_of_exectuable();
+ 
+ 		private:
+ 			int64_t m_resources_count;
+@@ -473,21 +473,21 @@ public:
+ 
+ 	private:
+ 		bool f_other_stuff_size;
+-		int32_t m_other_stuff_size;
++		int64_t m_other_stuff_size;
+ 
+ 	public:
+ 
+ 		/**
+ 		 * meta count, offset/length collection index, marker, cookie...
+ 		 */
+-		int32_t other_stuff_size();
++		int64_t other_stuff_size();
+ 
+ 	private:
+ 		bool f_binary_descriptor_offset;
+-		int32_t m_binary_descriptor_offset;
++		int64_t m_binary_descriptor_offset;
+ 
+ 	public:
+-		int32_t binary_descriptor_offset();
++		int64_t binary_descriptor_offset();
+ 
+ 	private:
+ 		bool f_binary_descriptor;
+@@ -517,10 +517,10 @@ public:
+ 
+ private:
+ 	bool f_end_of_binary_content;
+-	int32_t m_end_of_binary_content;
++	int64_t m_end_of_binary_content;
+ 
+ public:
+-	int32_t end_of_binary_content();
++	int64_t end_of_binary_content();
+ 
+ private:
+ 	bool f_header;
